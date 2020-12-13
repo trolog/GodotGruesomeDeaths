@@ -1,0 +1,53 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://sprites/hazards/Swing_Blade_Blood.png" type="Texture" id=1]
+[ext_resource path="res://sprites/hazards/Swing_Blade_Default.png" type="Texture" id=2]
+[ext_resource path="res://scripts/swing_blade.gd" type="Script" id=3]
+[ext_resource path="res://objects/player_body.tscn" type="PackedScene" id=4]
+[ext_resource path="res://objects/player_head.tscn" type="PackedScene" id=5]
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 2 ) ],
+"loop": true,
+"name": "default",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 1 ) ],
+"loop": true,
+"name": "blood",
+"speed": 5.0
+} ]
+
+[sub_resource type="Animation" id=2]
+resource_name = "swing"
+length = 3.0
+loop = true
+tracks/0/type = "bezier"
+tracks/0/path = NodePath(".:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PoolRealArray( 0, -0.8, 0, 0.8, 0, 180, -0.8, 0, 0.8, 0, 0, -0.8, 0, 0.8, 0 ),
+"times": PoolRealArray( 0, 1.5, 3 )
+}
+
+[node name="swing_blade" type="Area2D"]
+rotation = 3.07077
+script = ExtResource( 3 )
+player_head = ExtResource( 5 )
+player_body = ExtResource( 4 )
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+frames = SubResource( 1 )
+offset = Vector2( 47, 0 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+polygon = PoolVector2Array( 61, -33, 77, -31, 85, -24, 91, -15, 93, -8, 94, 2, 90, 16, 82, 26, 71, 33, 61, 32, 75, 22, 79, 6, 78, -13, 70, -27 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "swing"
+anims/swing = SubResource( 2 )
+[connection signal="body_entered" from="." to="." method="_on_swing_blade_body_entered"]
